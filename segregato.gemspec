@@ -8,11 +8,11 @@ Gem::Specification.new do |spec|
   spec.authors = ["SolehMQ"]
   spec.email = ["solehudinmq@gmail.com"]
 
-  spec.summary = "TODO: Write a short summary, because RubyGems requires one."
-  spec.description = "TODO: Write a longer description or delete this line."
-  spec.homepage = "TODO: Put your gem's website or public repo URL here."
+  spec.summary = "Segregato is a Ruby library that implements CQRS, separating the responsibility for writing and reading data across two or more databases. This optimizes database performance, increases flexibility, and makes our databases more scalable."
+  spec.description = "With the Segregato library, read and write capabilities can now be maximized. Because the databases are separated, our applications will be more scalable and optimized."
+  spec.homepage = "https://github.com/solehudinmq/segregato"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.2.0"
+  spec.required_ruby_version = ">= 3.0.0"
 
   spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
   spec.metadata["homepage_uri"] = spec.homepage
