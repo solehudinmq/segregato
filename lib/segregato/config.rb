@@ -1,10 +1,15 @@
+require 'dotenv/load' # only for development and test env
+
 module Segregato
   module Config
     @@master_config = nil
     @@replica_configs = []
 
     # load configuration for master database
-    def self.load(file_path = 'database.yml', env = (ENV['DB_ENV'] || 'development'))
+    def self.load
+      file_path = 'database.yml'
+      env = ENV['DB_ENV'] || 'development'
+
       # check the existence of the database config file
       raise "File '#{file_path}' not found." unless File.exist?(file_path)
 

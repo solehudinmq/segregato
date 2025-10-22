@@ -12,8 +12,9 @@ require_relative "segregato/error"
 
 module Segregato
   include Segregato::Error
+
   # load database configuration
-  Segregato::Config.load('database.yml')
+  Segregato::Config.load
   
   # class to use in model to write (command)
   class StrictWriteBase < ActiveRecord::Base
