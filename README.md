@@ -419,7 +419,6 @@ require_relative 'models/post_command'
 require_relative 'models/post_query'
 
 before do
-  puts "ENV = #{ENV['DB_ENV']}"
   content_type :json
 end
 
