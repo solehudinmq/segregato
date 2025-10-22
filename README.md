@@ -267,6 +267,22 @@ If you already have a replicated database and want to run it, you can do the fol
 sudo systemctl stop postgresql
 
 # running the database
+sudo -u postgres <postgresql-installation-location>/bin/pg_ctl start -D <folder-master-location>/master -l <folder-master-location>/master/master.log
+sudo -u postgres <postgresql-installation-location>/bin/pg_ctl start -D <folder-replication-1-location>/standby1 -l <folder-replication-1-location>/standby1/standby1.log
+sudo -u postgres <postgresql-installation-location>/bin/pg_ctl start -D <folder-replication-N-location>/standbyN -l <folder-replication-N-location>/standbyN/standbyN.log
+
+# check that the master and replica databases are running
+sudo ss -nlt | grep <master-port>
+sudo ss -nlt | grep <replica1-port>
+sudo ss -nlt | grep <replicaN-port>
+```
+
+Example : 
+```bash
+# stop postgresql default (if any)
+sudo systemctl stop postgresql
+
+# running the database
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/master -l /var/lib/postgresql/16/master/master.log
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby1 -l /var/lib/postgresql/16/standby1/standby1.log
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby2 -l /var/lib/postgresql/16/standby2/standby2.log
