@@ -12,11 +12,13 @@ require_relative "segregato/error"
 
 module Segregato
   include Segregato::Error
+  # load database configuration
+  Segregato::Config.load('database.yml')
   
   # class to use in model to write (command)
   class StrictWriteBase < ActiveRecord::Base
     self.abstract_class = true
-
+  
     # connected to the master database
     establish_connection(Segregato::Config.master_config)
 
