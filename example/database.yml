@@ -1,0 +1,33 @@
+development:
+  # Konfigurasi Master (Write Database)
+  # Ini adalah database utama tempat semua operasi TULIS (Command) terjadi.
+  master:
+    adapter: postgresql
+    database: coba_cqrs # Ganti dengan nama database master Anda
+    username: postgres
+    password: 
+    host: localhost
+    port: 5432
+    pool: 5
+
+  # Konfigurasi Replica 1 (Read Database)
+  # Database pertama yang digunakan untuk operasi BACA (Query).
+  replica1:
+    adapter: postgresql
+    database: coba_cqrs # Ganti dengan nama nama database replica pertama Anda
+    username: postgres
+    password: 
+    host: localhost
+    port: 5433
+    pool: 5
+
+  # Konfigurasi Replica 2 (Read Database)
+  # Database kedua yang digunakan untuk operasi BACA (Query), dipilih secara round-robin.
+  replica2:
+    adapter: postgresql
+    database: coba_cqrs # Ganti dengan nama database replica kedua Anda
+    username: postgres
+    password: 
+    host: localhost
+    port: 5434
+    pool: 5

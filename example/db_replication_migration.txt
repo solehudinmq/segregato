@@ -1,0 +1,123 @@
+# buat folder
+sudo mkdir /var/lib/postgresql/16/master
+sudo mkdir /var/lib/postgresql/16/standby1
+sudo mkdir /var/lib/postgresql/16/standby2
+
+# ganti user ke postgres
+sudo chown -R postgres:postgres /var/lib/postgresql/16/master
+sudo chown -R postgres:postgres /var/lib/postgresql/16/standby1
+sudo chown -R postgres:postgres /var/lib/postgresql/16/standby2
+
+# initialisasi data master (port 5432)
+sudo -u postgres /usr/lib/postgresql/16/bin/initdb -D /var/lib/postgresql/16/master
+
+# cek folder standby1 &standby2 harus milik user postgres
+ls -ld /var/lib/postgresql/16/standby1
+ls -ld /var/lib/postgresql/16/standby2
+
+# konfigurasi data master
+sudo nano /var/lib/postgresql/16/master/postgresql.conf
+
+# isi start
+
+# Pastikan baris ini diatur:
+listen_addresses = '*'
+port = 5432
+wal_level = replica
+max_wal_senders = 4
+max_replication_slots = 2
+hot_standby = on
+
+# isi end
+
+sudo -u postgres nano /var/lib/postgresql/16/master/pg_hba.conf
+
+# isi start
+
+host    replication     replication_user       127.0.0.1/32            scram-sha-256
+
+# isi end
+
+# stop pgsql default
+sudo systemctl stop postgresql
+
+# restart master
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/master -l /var/lib/postgresql/16/master/master.log
+
+# cek master running
+sudo ss -nlt | grep 5432
+
+# initialisasi data replica (port 5433 & 5434)
+
+# stop & hapus replica 1
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl stop -D /var/lib/postgresql/16/standby1
+sudo -u postgres rm -rf /var/lib/postgresql/16/standby1/*
+
+# stop & hapus replica 2
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl stop -D /var/lib/postgresql/16/standby2
+sudo -u postgres rm -rf /var/lib/postgresql/16/standby2/*
+
+# login to psql cli
+sudo -u postgres psql
+
+CREATE USER replication_user WITH REPLICATION LOGIN ENCRYPTED PASSWORD 'replication_user';
+
+SELECT * FROM pg_create_physical_replication_slot('standby1_slot');
+SELECT * FROM pg_create_physical_replication_slot('standby2_slot');
+SELECT slot_name, slot_type, active FROM pg_replication_slots;
+
+# end logi psql cli
+
+# ambil base backup
+sudo -u postgres pg_basebackup -h 127.0.0.1 -p 5432 -U replication_user -D /var/lib/postgresql/16/standby1 -F p -X stream -R -W -v --slot=standby1_slot
+sudo -u postgres pg_basebackup -h 127.0.0.1 -p 5432 -U replication_user -D /var/lib/postgresql/16/standby2 -F p -X stream -R -W -v --slot=standby2_slot
+
+# edit replica 1
+sudo -u postgres nano /var/lib/postgresql/16/standby1/postgresql.conf
+
+# isi start
+
+port = 5433
+
+# isi end
+
+# edit replica 2
+sudo -u postgres nano /var/lib/postgresql/16/standby2/postgresql.conf
+
+# isi start
+
+port = 5434
+
+# isi end
+
+# update replica permissions
+sudo chmod 0700 /var/lib/postgresql/16/standby1
+sudo chmod 0700 /var/lib/postgresql/16/standby2
+
+# mulai database replica 1
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby1 -l /var/lib/postgresql/16/master/standby1.log
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby2 -l /var/lib/postgresql/16/master/standby2.log
+
+# cek replica running
+sudo ss -nlt | grep 5433
+sudo ss -nlt | grep 5434
+
+# login to psql cli
+sudo -u postgres psql
+
+SELECT client_addr, state, sync_state, application_name
+FROM pg_stat_replication;
+
+CREATE DATABASE coba_cqrs;
+
+\c coba_cqrs;
+
+CREATE TABLE posts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+# end logi psql cli
