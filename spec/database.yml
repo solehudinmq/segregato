@@ -1,0 +1,18 @@
+test:
+  master:
+    adapter: sqlite3
+    database: db/coba_cqrs_master.sqlite3
+    pool: 5
+    timeout: 5000
+
+  replica1:
+    adapter: sqlite3
+    database: db/coba_cqrs_replica1.sqlite3
+    pool: 5
+    timeout: 5000
+
+  replica2:
+    adapter: sqlite3
+    database: db/coba_cqrs_replica2.sqlite3
+    pool: 5
+    timeout: 5000
