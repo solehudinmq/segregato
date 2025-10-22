@@ -299,8 +299,8 @@ Make sure there's a configuration file in the database, for example 'database.ym
 development: # you can change it to : development/test/production
   master: # master keyword is required
     adapter: postgresql
-    database: coba_cqrs # change according to your database
-    username: postgres
+    database: coba_cqrs # change according to your master database
+    username: postgres 
     password: password # change according to your master database password
     host: localhost # change according to your master host
     port: 5432 # change according to your master database port
@@ -309,7 +309,7 @@ development: # you can change it to : development/test/production
   # There must be at least 1 replica database
   replica1:
     adapter: postgresql
-    database: coba_cqrs # change according to your database
+    database: coba_cqrs # change according to your replica 1 database
     username: postgres
     password: password # change according to your replica 1 database password
     host: localhost # change according to your replica1 host
@@ -318,7 +318,7 @@ development: # you can change it to : development/test/production
 
   replica2:
     adapter: postgresql
-    database: coba_cqrs # change according to your database
+    database: coba_cqrs # change according to your replica N database
     username: postgres
     password: password # change according to your replica N database password
     host: localhost # change according to your replicaN host
