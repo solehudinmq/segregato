@@ -277,50 +277,188 @@ sudo ss -nlt | grep 5433
 sudo ss -nlt | grep 5434
 ```
 
-Make sure there's a configuration file in the database, for example, database.yml (the file is located in the root folder of your application). Here's an example for pgsql :
+Make sure there's a configuration file in the database, for example 'database.yml' (the file is located in the root folder of your application). Here's an example for pgsql :
 ```ruby
-development:
-  master:
+# database.yml
+development: # you can change it to : development/test/production
+  master: # master keyword is required
     adapter: postgresql
-    database: coba_cqrs
+    database: coba_cqrs # change according to your database
     username: postgres
-    password: 
-    host: localhost
-    port: 5432
+    password: password # change according to your master database password
+    host: localhost # change according to your master host
+    port: 5432 # change according to your master database port
     pool: 5
 
+  # There must be at least 1 replica database
   replica1:
     adapter: postgresql
-    database: coba_cqrs
+    database: coba_cqrs # change according to your database
     username: postgres
-    password: 
-    host: localhost
-    port: 5433
+    password: password # change according to your replica 1 database password
+    host: localhost # change according to your replica1 host
+    port: 5433 # change according to your replica 1 database port
     pool: 5
 
   replica2:
     adapter: postgresql
-    database: coba_cqrs
+    database: coba_cqrs # change according to your database
     username: postgres
-    password: 
-    host: localhost
-    port: 5434
+    password: password # change according to your replica N database password
+    host: localhost # change according to your replicaN host
+    port: 5434 # change according to your replica N database port
     pool: 5
+```
+
+Specifically for development and test environments, ensure there's an .env file in your application folder. Here's an example :
+```ruby
+#.env
+DB_ENV=development # you can change it to : development/test/production
+DB_CONFIG=database.yml # you can change it according to your config database name
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+In the model that will be implemented for the command (write to database master) : 
+```ruby
+require 'segregato'
 
-## Development
+include Segregato
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+class ModelCommand < StrictWriteBase
+end
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Example : 
+```ruby
+require 'segregato'
+
+include Segregato
+
+class PostCommand < StrictWriteBase
+  self.table_name = 'posts'
+
+  validates :title, presence: true, length: { minimum: 1 }
+end
+```
+
+In the model that will be implemented for the query (read to database replication) : 
+```ruby
+require 'segregato'
+
+include Segregato
+
+class ModelQuery < StrictReadBase
+end
+```
+
+Example : 
+```ruby
+require 'segregato'
+
+include Segregato
+
+class PostQuery < StrictReadBase
+  self.table_name = 'posts'
+end
+```
+
+The following is an example of use in the application :
+- Gemfile : 
+```ruby
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "byebug"
+gem "sinatra"
+gem "activerecord"
+gem "pg"
+gem "dotenv", groups: [:development, :test]
+gem "segregato", git: "git@github.com:solehudinmq/segregato.git", branch: "main"
+gem "rackup", "~> 2.2"
+gem "puma", "~> 7.1"
+
+```
+
+- models/post_command.rb
+```ruby
+include Segregato
+
+class PostCommand < StrictWriteBase
+  self.table_name = 'posts'
+
+  validates :title, presence: true, length: { minimum: 1 }
+end
+```
+
+- models/post_query.rb
+```ruby
+include Segregato
+
+class PostQuery < StrictReadBase
+  self.table_name = 'posts'
+end
+```
+
+- app.rb : 
+```ruby
+# app.rb
+require 'sinatra'
+require 'json'
+require 'byebug'
+require 'segregato'
+require 'dotenv/load'
+require_relative 'models/post_command'
+require_relative 'models/post_query'
+
+before do
+  content_type :json
+end
+
+# write operations
+post '/posts' do
+  begin
+    data = JSON.parse(request.body.read)
+        
+    post = PostCommand.create!(
+      title: data['title'], 
+      content: data['content']
+    )
+    
+    status 201
+    { message: "Post berhasil dibuat.", id: post.id }.to_json
+  rescue => e
+    status 500
+    return { error: e.message }.to_json
+  end
+end
+
+# read operations
+get '/posts' do
+  begin
+    posts = PostQuery.limit(3).map do |post|
+      { 
+        id: post.id, 
+        title: post.title, 
+        content: post.content 
+      }
+    end
+
+    { count: posts.size, posts: posts }.to_json
+  rescue => e
+    status 500
+    return { error: e.message }.to_json
+  end
+end
+
+# bundle install
+# bundle exec ruby app.rb
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/segregato.
+Bug reports and pull requests are welcome on GitHub at https://github.com/solehudinmq/segregato.
 
 ## License
 
