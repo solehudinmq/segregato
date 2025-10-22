@@ -1,59 +1,53 @@
-# buat folder
+# create a folder
 sudo mkdir /var/lib/postgresql/16/master
 sudo mkdir /var/lib/postgresql/16/standby1
 sudo mkdir /var/lib/postgresql/16/standby2
 
-# ganti user ke postgres
+# change user folder privileges to postgres
 sudo chown -R postgres:postgres /var/lib/postgresql/16/master
 sudo chown -R postgres:postgres /var/lib/postgresql/16/standby1
 sudo chown -R postgres:postgres /var/lib/postgresql/16/standby2
 
-# initialisasi data master (port 5432)
+# master data initialization (port 5432)
 sudo -u postgres /usr/lib/postgresql/16/bin/initdb -D /var/lib/postgresql/16/master
 
-# cek folder standby1 &standby2 harus milik user postgres
+# check standby1 & standbyN folders must belong to the postgres user
 ls -ld /var/lib/postgresql/16/standby1
 ls -ld /var/lib/postgresql/16/standby2
 
-# konfigurasi data master
+# master database configuration
 sudo nano /var/lib/postgresql/16/master/postgresql.conf
 
-# isi start
-
-# Pastikan baris ini diatur:
+# start content
 listen_addresses = '*'
 port = 5432
 wal_level = replica
 max_wal_senders = 4
 max_replication_slots = 2
 hot_standby = on
+# end content
 
-# isi end
-
+# postgreSQL client authentication configuration file
 sudo -u postgres nano /var/lib/postgresql/16/master/pg_hba.conf
 
-# isi start
-
+# start content
 host    replication     replication_user       127.0.0.1/32            scram-sha-256
+# end content
 
-# isi end
-
-# stop pgsql default
+# stop postgresql default (if any)
 sudo systemctl stop postgresql
 
-# restart master
+# start database master
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/master -l /var/lib/postgresql/16/master/master.log
 
-# cek master running
+# check if the master database is running
 sudo ss -nlt | grep 5432
 
-# initialisasi data replica (port 5433 & 5434)
-
-# stop & hapus replica 1
+# replica database initialization (port 5433 & 5434)
+# stop & delete replica 1
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl stop -D /var/lib/postgresql/16/standby1
 sudo -u postgres rm -rf /var/lib/postgresql/16/standby1/*
-
-# stop & hapus replica 2
+# stop & delete replica N
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl stop -D /var/lib/postgresql/16/standby2
 sudo -u postgres rm -rf /var/lib/postgresql/16/standby2/*
 
@@ -65,40 +59,35 @@ CREATE USER replication_user WITH REPLICATION LOGIN ENCRYPTED PASSWORD 'replicat
 SELECT * FROM pg_create_physical_replication_slot('standby1_slot');
 SELECT * FROM pg_create_physical_replication_slot('standby2_slot');
 SELECT slot_name, slot_type, active FROM pg_replication_slots;
+# logout from psql cli
 
-# end logi psql cli
-
-# ambil base backup
+# creating a Base Backup (initial data copy) from the primary PostgreSQL server and preparing the current server to become a Standby server (Replica), using the Streaming Replication and Replication Slot methods.
 sudo -u postgres pg_basebackup -h 127.0.0.1 -p 5432 -U replication_user -D /var/lib/postgresql/16/standby1 -F p -X stream -R -W -v --slot=standby1_slot
 sudo -u postgres pg_basebackup -h 127.0.0.1 -p 5432 -U replication_user -D /var/lib/postgresql/16/standby2 -F p -X stream -R -W -v --slot=standby2_slot
 
-# edit replica 1
+# replica1 database configuration
 sudo -u postgres nano /var/lib/postgresql/16/standby1/postgresql.conf
 
-# isi start
-
+# start content
 port = 5433
+# end content
 
-# isi end
-
-# edit replica 2
+# replicaN database configuration
 sudo -u postgres nano /var/lib/postgresql/16/standby2/postgresql.conf
 
-# isi start
-
+# start content
 port = 5434
-
-# isi end
+# end content
 
 # update replica permissions
 sudo chmod 0700 /var/lib/postgresql/16/standby1
 sudo chmod 0700 /var/lib/postgresql/16/standby2
 
-# mulai database replica 1
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby1 -l /var/lib/postgresql/16/master/standby1.log
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby2 -l /var/lib/postgresql/16/master/standby2.log
+# start database replica
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby1 -l /var/lib/postgresql/16/standby1/standby1.log
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby2 -l /var/lib/postgresql/16/standby2/standby2.log
 
-# cek replica running
+# check if the replica database is running
 sudo ss -nlt | grep 5433
 sudo ss -nlt | grep 5434
 
@@ -120,4 +109,4 @@ CREATE TABLE posts (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-# end logi psql cli
+# logout from psql cli

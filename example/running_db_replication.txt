@@ -1,9 +1,12 @@
+# stop postgresql default (if any)
 sudo systemctl stop postgresql
 
+# running the database
 sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/master -l /var/lib/postgresql/16/master/master.log
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby1 -l /var/lib/postgresql/16/master/standby1.log
-sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby2 -l /var/lib/postgresql/16/master/standby2.log
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby1 -l /var/lib/postgresql/16/standby1/standby1.log
+sudo -u postgres /usr/lib/postgresql/16/bin/pg_ctl start -D /var/lib/postgresql/16/standby2 -l /var/lib/postgresql/16/standby2/standby2.log
 
+# check that the master and replica databases are running
 sudo ss -nlt | grep 5432
 sudo ss -nlt | grep 5433
 sudo ss -nlt | grep 5434
