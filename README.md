@@ -299,38 +299,38 @@ Make sure there's a configuration file in the database, for example 'database.ym
 development: # you can change it to : development/test/production
   master: # master keyword is required
     adapter: postgresql
-    database: coba_cqrs # change according to your master database
-    username: postgres 
-    password: password # change according to your master database password
-    host: localhost # change according to your master host
-    port: 5432 # change according to your master database port
-    pool: 5
+    database: <db-master-name> # change according to your master database
+    username: <db-master-username> 
+    password: <db-master-password> # change according to your master database password
+    host: <db-master-host> # change according to your master host
+    port: <db-master-port> # change according to your master database port
+    pool: <db-master-pool>
 
   # There must be at least 1 replica database
   replica1:
     adapter: postgresql
-    database: coba_cqrs # change according to your replica 1 database
-    username: postgres
-    password: password # change according to your replica 1 database password
-    host: localhost # change according to your replica1 host
-    port: 5433 # change according to your replica 1 database port
-    pool: 5
+    database: <db-replica1-name> # change according to your replica 1 database
+    username: <db-replica1-username> 
+    password: <db-replica1-password> # change according to your replica 1 database password
+    host: <db-replica1-host> # change according to your replica1 host
+    port: <db-replica1-port> # change according to your replica 1 database port
+    pool: <db-replica1-pool>
 
   replica2:
     adapter: postgresql
-    database: coba_cqrs # change according to your replica N database
-    username: postgres
-    password: password # change according to your replica N database password
-    host: localhost # change according to your replicaN host
-    port: 5434 # change according to your replica N database port
-    pool: 5
+    database: <db-replica2-name> # change according to your replica N database
+    username: <db-replica2-username>
+    password: <db-replica2-password> # change according to your replica N database password
+    host: <db-replica2-host> # change according to your replicaN host
+    port: <db-replica2-port> # change according to your replica N database port
+    pool: <db-replica2-pool>
 ```
 
 Specifically for development and test environments, ensure there's an .env file in your application folder. Here's an example :
 ```ruby
 #.env
-DB_ENV=development # you can change it to : development/test/production
-DB_CONFIG=database.yml # you can change it according to your config database name
+DB_ENV=<db-environment> # you can change it to : development/test/production
+DB_CONFIG=<config-file-name> # this is the .yml config file
 ```
 
 ## Usage
@@ -386,6 +386,46 @@ gem "segregato", git: "git@github.com:solehudinmq/segregato.git", branch: "main"
 gem "rackup", "~> 2.2"
 gem "puma", "~> 7.1"
 
+```
+
+- database.yml
+```ruby
+# database.yml
+development: # you can change it to : development/test/production
+  master: # master keyword is required
+    adapter: postgresql
+    database: coba_cqrs # change according to your master database
+    username: postgres 
+    password: password # change according to your master database password
+    host: localhost # change according to your master host
+    port: 5432 # change according to your master database port
+    pool: 5
+
+  # There must be at least 1 replica database
+  replica1:
+    adapter: postgresql
+    database: coba_cqrs # change according to your replica 1 database
+    username: postgres
+    password: password # change according to your replica 1 database password
+    host: localhost # change according to your replica1 host
+    port: 5433 # change according to your replica 1 database port
+    pool: 5
+
+  replica2:
+    adapter: postgresql
+    database: coba_cqrs # change according to your replica N database
+    username: postgres
+    password: password # change according to your replica N database password
+    host: localhost # change according to your replicaN host
+    port: 5434 # change according to your replica N database port
+    pool: 5
+```
+
+- .env
+```ruby
+#.env
+DB_ENV=development # you can change it to : development/test/production
+DB_CONFIG=database.yml # you can change it according to your config database name
 ```
 
 - models/post_command.rb
