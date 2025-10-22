@@ -28,7 +28,7 @@ cd your_ruby_application
 bundle install
 ```
 
-Setup database replication in postgresql :
+Setup database replication, here is an example in pgsql :
 ```bash
 # create a folder
 sudo mkdir <folder-master-location>/master
@@ -261,7 +261,7 @@ CREATE TABLE posts (
 # logout from psql cli
 ```
 
-If you already have a replicated database and want to run it, you can do the following :
+If you already have a replicated database and want to run it in pgsql, you can do the following :
 ```bash
 # stop postgresql default (if any)
 sudo systemctl stop postgresql
@@ -335,22 +335,21 @@ DB_CONFIG=database.yml # you can change it according to your config database nam
 
 ## Usage
 
-In the model that will be implemented for the command (write to database master) : 
+To use this library, add this to your code :
 ```ruby
 require 'segregato'
 
 include Segregato
+```
 
-class ModelCommand < StrictWriteBase
+In the model that will be implemented for the command (write to database master) : 
+```ruby
+class YourModel < StrictWriteBase
 end
 ```
 
 Example : 
 ```ruby
-require 'segregato'
-
-include Segregato
-
 class PostCommand < StrictWriteBase
   self.table_name = 'posts'
 
@@ -360,20 +359,12 @@ end
 
 In the model that will be implemented for the query (read to database replication) : 
 ```ruby
-require 'segregato'
-
-include Segregato
-
-class ModelQuery < StrictReadBase
+class YourModel < StrictReadBase
 end
 ```
 
 Example : 
 ```ruby
-require 'segregato'
-
-include Segregato
-
 class PostQuery < StrictReadBase
   self.table_name = 'posts'
 end
@@ -399,8 +390,6 @@ gem "puma", "~> 7.1"
 
 - models/post_command.rb
 ```ruby
-include Segregato
-
 class PostCommand < StrictWriteBase
   self.table_name = 'posts'
 
@@ -410,8 +399,6 @@ end
 
 - models/post_query.rb
 ```ruby
-include Segregato
-
 class PostQuery < StrictReadBase
   self.table_name = 'posts'
 end
@@ -425,10 +412,14 @@ require 'json'
 require 'byebug'
 require 'segregato'
 require 'dotenv/load'
+
+include Segregato
+
 require_relative 'models/post_command'
 require_relative 'models/post_query'
 
 before do
+  puts "ENV = #{ENV['DB_ENV']}"
   content_type :json
 end
 
@@ -453,7 +444,7 @@ end
 # read operations
 get '/posts' do
   begin
-    posts = PostQuery.limit(3).map do |post|
+    posts = PostQuery.all.map do |post|
       { 
         id: post.id, 
         title: post.title, 
