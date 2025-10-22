@@ -1,4 +1,4 @@
-require 'dotenv/load' # only for development and test env
+require "dotenv/load" # only for development and test env
 
 module Segregato
   module Config
@@ -7,7 +7,7 @@ module Segregato
 
     # load configuration for master database
     def self.load
-      file_path = 'database.yml'
+      file_path = ENV['DB_CONFIG'] || 'database.yml'
       env = ENV['DB_ENV'] || 'development'
 
       # check the existence of the database config file
@@ -43,12 +43,12 @@ module Segregato
 
     # get master database config
     def self.master_config
-      @@master_config || raise("The Master configuration has not been loaded. Call Segregato::Config.load(file_path, env) first.")
+      @@master_config || raise("The Master configuration has not been loaded.")
     end
 
     # get replica database config
     def self.replica_configs
-      @@replica_configs || raise("The Replica configuration has not been loaded. Call Segregato::Config.load(file_path, env) first.")
+      @@replica_configs || raise("The Replica configuration has not been loaded.")
     end
   end
 end

@@ -1,8 +1,12 @@
 # Segregato
 
-TODO: Delete this and the text below, and describe your gem
+Segregato is a Ruby library that implements CQRS, separating the responsibility for writing and reading data across two or more databases. This optimizes database performance, increases flexibility, and makes our databases more scalable.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/segregato`. To experiment with that code, run `bin/console` for an interactive prompt.
+With the Segregato library, read and write capabilities can now be maximized. Because the databases are separated, our applications will be more scalable and optimized.
+
+## High Flow
+
+
 
 ## Installation
 
