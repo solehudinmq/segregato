@@ -25,7 +25,7 @@ module Segregato
 
     # list of prohibited reading methods
     FORBIDDEN_READ_METHODS = [
-      :find, :find_by, :where, :all, :first, :last, :limit, 
+      :find, :find_by, :where, :first, :last, :limit, 
       :pluck, :exists?, :count, :sum, :average, :minimum, :maximum, :reload
     ].freeze
 
