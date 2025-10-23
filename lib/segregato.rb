@@ -41,7 +41,7 @@ module Segregato
       raise StrictWriteModelError.new(:reload)
     end
     
-    # override methode .delete_all
+    # override method .delete_all
     def self.delete_all(*args, &block)
       unscoped.delete_all(*args, &block)
     end
