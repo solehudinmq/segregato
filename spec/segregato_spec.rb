@@ -4,6 +4,8 @@ RSpec.describe Segregato do
   before(:all) do
     # Delete old data and enter new data
     PostCommand.delete_all
+
+    puts "TOTAL DATA : #{PostQuery.count}"
     
     @master_db = 'db/coba_cqrs_master.sqlite3'
     @replica1_db = 'db/coba_cqrs_replica1.sqlite3'
@@ -35,6 +37,12 @@ RSpec.describe Segregato do
   end
 
   it "return failed when write data tried using read method" do
+    begin
+      PostCommand.all
+    rescue => e
+      expect(e.message).to eq "The Write Model is not allowed to perform the Read operation: all"
+    end
+
     begin
       PostCommand.find(title: 'Post 1 Title')
     rescue => e

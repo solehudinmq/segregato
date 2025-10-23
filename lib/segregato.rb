@@ -25,7 +25,7 @@ module Segregato
 
     # list of prohibited reading methods
     FORBIDDEN_READ_METHODS = [
-      :find, :find_by, :where, :first, :last, :limit, 
+      :find, :find_by, :where, :all, :first, :last, :limit, 
       :pluck, :exists?, :count, :sum, :average, :minimum, :maximum, :reload
     ].freeze
 
@@ -39,6 +39,11 @@ module Segregato
     # override instance method for read operations
     def reload(*)
       raise StrictWriteModelError.new(:reload)
+    end
+    
+    # override methode .delete_all
+    def self.delete_all(*args, &block)
+      unscoped.delete_all(*args, &block)
     end
   end
 
