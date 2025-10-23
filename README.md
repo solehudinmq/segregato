@@ -296,7 +296,7 @@ sudo ss -nlt | grep 5434
 Make sure there's a configuration file in the database, for example 'database.yml' (the file is located in the root folder of your application). Here's an example for pgsql :
 ```ruby
 # database.yml
-development: # you can change it to : development/test/production
+<env>: # you can change it to : development/test/production
   master: # master keyword is required
     adapter: postgresql
     database: <db-master-name> # change according to your master database
