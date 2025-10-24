@@ -2,14 +2,17 @@
 
 RSpec.describe Segregato do
   before(:all) do
-    # Delete old data and enter new data
-    PostCommand.delete_all
-
     puts "TOTAL DATA : #{PostQuery.count}"
     
     @master_db = 'db/coba_cqrs_master.sqlite3'
     @replica1_db = 'db/coba_cqrs_replica1.sqlite3'
     @replica2_db = 'db/coba_cqrs_replica2.sqlite3'
+  end
+
+  after(:all) do
+    # delete all databases
+    db_location = "#{Dir.pwd}/db"
+    FileUtils.rm_r(db_location) if File.exist?(db_location)
   end
 
   it "return success when writing data to the master database" do

@@ -21,8 +21,8 @@ ActiveRecord::Schema.define do
   end
 end
 
-require_relative 'post_command'
-require_relative 'post_query'
+require_relative '../example/models/post_command'
+require_relative '../example/models/post_query'
 require_relative 'replica_simulation'
 
 PostCommand.reset_column_information
