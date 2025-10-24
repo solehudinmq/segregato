@@ -371,8 +371,8 @@ end
 ```
 
 The following is an example of use in the application :
-- Gemfile : 
 ```ruby
+# Gemfile
 # frozen_string_literal: true
 
 source "https://rubygems.org"
@@ -388,7 +388,6 @@ gem "puma", "~> 7.1"
 
 ```
 
-- database.yml
 ```ruby
 # database.yml
 development: # you can change it to : development/test/production
@@ -421,15 +420,14 @@ development: # you can change it to : development/test/production
     pool: 5
 ```
 
-- .env
 ```ruby
 #.env
 DB_ENV=development # you can change it to : development/test/production
 DB_CONFIG=database.yml # you can change it according to your config database name
 ```
 
-- models/post_command.rb
 ```ruby
+# models/post_command.rb
 class PostCommand < StrictWriteBase
   self.table_name = 'posts'
 
@@ -437,14 +435,13 @@ class PostCommand < StrictWriteBase
 end
 ```
 
-- models/post_query.rb
 ```ruby
+# models/post_query.rb
 class PostQuery < StrictReadBase
   self.table_name = 'posts'
 end
 ```
 
-- app.rb : 
 ```ruby
 # app.rb
 require 'sinatra'
