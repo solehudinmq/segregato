@@ -159,7 +159,7 @@ CREATE TABLE <your-table> (
 
 ```
 
-For more details, you can see the example in the folder [example/db_replication_setup.txt](URL atau Path Tujuannya)
+For more details, you can see the example in the folder [example/db_replication_setup.txt](https://github.com/solehudinmq/segregato/blob/development/example/db_replication_setup.txt).
 
 If you already have a replicated database and want to run it in pgsql, you can do the following :
 ```bash
@@ -177,7 +177,7 @@ sudo ss -nlt | grep <replica1-port>
 sudo ss -nlt | grep <replicaN-port>
 ```
 
-For more details, you can see the example in the folder [example/running_db_replication.txt](URL atau Path Tujuannya)
+For more details, you can see the example in the folder [example/running_db_replication.txt](https://github.com/solehudinmq/segregato/blob/development/example/running_db_replication.txt).
 
 ## Configuration Database
 
@@ -215,7 +215,7 @@ Make sure your application has files for the configuration database in the root 
     pool: <db-replicaN-pool>
 ```
 
-For more details, you can see the example in the folder [example/database.yml](URL atau Path Tujuannya)
+For more details, you can see the example in the folder [example/database.yml](https://github.com/solehudinmq/segregato/blob/development/example/database.yml).
 
 ## Environment Configuration
 
@@ -227,7 +227,7 @@ DB_ENV=<db-environment> # you can change it to : development/test/production
 DB_CONFIG=<config-file-name> # this is the .yml config file
 ```
 
-For more details, you can see the example in the folder [example/.env](URL atau Path Tujuannya)
+For more details, you can see the example in the folder [example/.env](https://github.com/solehudinmq/segregato/blob/development/example/.env).
 
 ## Usage
 
@@ -246,7 +246,7 @@ class YourModel < StrictWriteBase
 end
 ```
 
-For more details, you can see the example in the folder [example/models/post_command.rb](URL atau Path Tujuannya)
+For more details, you can see the example in the folder [example/models/post_command.rb](https://github.com/solehudinmq/segregato/blob/development/example/models/post_command.rb).
 
 In the model that will be implemented for the query (read to database replication) : 
 ```ruby
@@ -254,11 +254,11 @@ class YourModel < StrictReadBase
 end
 ```
 
-For more details, you can see the example in the folder [example/models/post_query.rb](URL atau Path Tujuannya)
+For more details, you can see the example in the folder [example/models/post_query.rb](https://github.com/solehudinmq/segregato/blob/development/example/models/post_query.rb).
 
 ## Example Implementation in Your Application
 
-For examples of applications that use this gem, you can see them here : [example](URL atau Path Tujuannya)
+For examples of applications that use this gem, you can see them here : [example](https://github.com/solehudinmq/segregato/tree/development/example).
 
 ## Contributing
 
