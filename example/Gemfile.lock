@@ -1,10 +1,11 @@
 GIT
   remote: git@github.com:solehudinmq/segregato.git
-  revision: cf4e9f621442a65fda4fdcad91e57a19f0a639f0
+  revision: 75df7f534499ffeddc40fc587270c3a59440d3a7
   branch: main
   specs:
     segregato (0.1.0)
       activerecord (>= 6.1)
+      concurrent-ruby (~> 1.1)
       dotenv (~> 2.8)
       pg (~> 1.5)
 
