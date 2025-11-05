@@ -7,9 +7,11 @@ With the Segregato library, read and write capabilities can now be maximized. Be
 ## High Flow
 
 Potential problems if our database already has large data :
+
 ![Logo Ruby](https://github.com/solehudinmq/segregato/blob/development/high_flow/Segregato-problem.jpg)
 
 With Segregato, our applications can now have good performance for write and read processes :
+
 ![Logo Ruby](https://github.com/solehudinmq/segregato/blob/development/high_flow/Segregato-solution.jpg)
 
 ## Requirement
