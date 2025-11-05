@@ -37,7 +37,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotenv", "~> 2.8"
   spec.add_dependency "activerecord", ">= 6.1"
   spec.add_dependency "pg", "~> 1.5"
-
+  spec.add_dependency "concurrent-ruby", "~> 1.1"
+  
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 end
