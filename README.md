@@ -161,7 +161,10 @@ CREATE TABLE <your-table> (
 
 For more details, you can see the example in the folder [example/db_replication_setup.txt](https://github.com/solehudinmq/segregato/blob/development/example/db_replication_setup.txt).
 
+### Running Replication Database
+
 If you already have a replicated database and want to run it in pgsql, you can do the following :
+
 ```bash
 # stop postgresql default (if any)
 sudo systemctl stop postgresql
