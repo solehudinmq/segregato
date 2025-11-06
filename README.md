@@ -41,7 +41,7 @@ cd your_ruby_application
 bundle install
 ```
 
-### Database Replication Setup
+## Database Replication Setup
 
 The following are the database replication steps for the pgsql database :
 
@@ -163,7 +163,7 @@ CREATE TABLE <your-table> (
 
 For more details, you can see the following example : [example/db_replication_setup.txt](https://github.com/solehudinmq/segregato/blob/development/example/db_replication_setup.txt).
 
-### Running Database Replication
+## Running Database Replication
 
 If you already have a replicated database and want to run it in pgsql, you can do the following :
 
