@@ -41,7 +41,7 @@ cd your_ruby_application
 bundle install
 ```
 
-### Replication Database Setup
+### Database Replication Setup
 
 The following are the database replication steps for the pgsql database :
 
@@ -163,7 +163,7 @@ CREATE TABLE <your-table> (
 
 For more details, you can see the following example : [example/db_replication_setup.txt](https://github.com/solehudinmq/segregato/blob/development/example/db_replication_setup.txt).
 
-### Running Replication Database
+### Running Database Replication
 
 If you already have a replicated database and want to run it in pgsql, you can do the following :
 
@@ -184,7 +184,7 @@ sudo ss -nlt | grep <replicaN-port>
 
 For more details, you can see the following example : [example/running_db_replication.txt](https://github.com/solehudinmq/segregato/blob/development/example/running_db_replication.txt).
 
-## Configuration Database
+## Database Configuration
 
 Make sure your application has files for the configuration database in the root folder, for example :
 
